@@ -154,7 +154,7 @@ public class Day1 implements Challenge
 	private static Optional<Doublet<Integer>> streamSearch(List<Integer> input)
 	{
 		return input.stream()
-				.filter(in -> input.get(2020 - in) != null)
+				.filter(in -> input.contains(2020 - in))
 				.findFirst()
 				.map(i -> new Doublet<>(i, 2020 - i));
 	}
