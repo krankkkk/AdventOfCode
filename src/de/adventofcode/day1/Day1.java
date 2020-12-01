@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
  * # VM version: JDK 15, OpenJDK 64-Bit Server VM, 15+36
  * <p>
  * Benchmark            Mode  Cnt    Score   Error  Units
- * Day1.containsSearch  avgt    5   27,044 ±  1,229  us/op
+ * Day1.containsSearch  avgt    5  16,677 ± 0,417  us/op
  * Day1.defaultSearch   avgt    5  265,980 ± 11,514  us/op
  */
 public class Day1
@@ -33,9 +33,9 @@ public class Day1
 	@Fork(value = 1)
 	/**
 	 * Result "de.adventofcode.day1.Day1.containsSearch":
-	 *   27,044 ±(99.9%) 1,229 us/op [Average]
-	 *   (min, avg, max) = (26,625, 27,044, 27,437), stdev = 0,319
-	 *   CI (99.9%): [25,815, 28,272] (assumes normal distribution)
+	 *   16,677 ±(99.9%) 0,417 us/op [Average]
+	 *   (min, avg, max) = (16,546, 16,677, 16,805), stdev = 0,108
+	 *   CI (99.9%): [16,261, 17,094] (assumes normal distribution)
 	 */
 	public static void containsSearch(final MapWrapper inputWrapper,
 	                                  final Blackhole blackhole)
@@ -45,6 +45,11 @@ public class Day1
 		{
 			for (final Integer middle : input.keySet())
 			{
+				if (outer + middle > 2020)
+				{
+					continue;
+				}
+
 				final int rest = 2020 - outer - middle;
 
 				if (input.get(rest) != null)
