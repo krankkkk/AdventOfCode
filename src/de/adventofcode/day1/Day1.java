@@ -7,6 +7,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.lang.annotation.Inherited;
 import java.net.URISyntaxException;
 import java.util.Collections;
 import java.util.HashMap;
@@ -37,8 +38,8 @@ public class Day1
 	 *   (min, avg, max) = (16,546, 16,677, 16,805), stdev = 0,108
 	 *   CI (99.9%): [16,261, 17,094] (assumes normal distribution)
 	 */
-	public static void containsSearch(final MapWrapper inputWrapper,
-	                                  final Blackhole blackhole)
+	public static void mapSearch(final MapWrapper inputWrapper,
+	                             final Blackhole blackhole)
 	{
 		final Map<Integer, Integer> input = inputWrapper.map;
 		for (final Integer outer : input.keySet())
