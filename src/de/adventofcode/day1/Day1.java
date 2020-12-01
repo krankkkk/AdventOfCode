@@ -16,9 +16,11 @@ import java.util.stream.Collectors;
  * # JMH version: 1.26
  * # VM version: JDK 15, OpenJDK 64-Bit Server VM, 15+36
  * <p>
- * Benchmark            Mode  Cnt    Score   Error  Units
- * Day1.containsSearch  avgt    5  16,677 ± 0,417  us/op
- * Day1.defaultSearch   avgt    5  265,980 ± 11,514  us/op
+ * Benchmark           Mode  Cnt    Score   Error  Units
+ * Day1.defaultSearch  avgt    5  225,546 ± 3,132  us/op
+ * Day1.mapSearch      avgt    5   21,260 ± 0,557  us/op
+ * Day1.sortSearch     avgt    5   18,709 ± 0,441  us/op <- Sorting in Method
+ * Day1.sortSearch     avgt    5    0,176 ± 0,009  us/op <- Sorting before
  */
 public class Day1
 {
@@ -98,12 +100,13 @@ public class Day1
 	@BenchmarkMode(Mode.AverageTime)
 	@Fork(value = 1)
 	/**
-	 * Result "de.adventofcode.day1.Day1.sortSearch":
+	 * Sorting within the Method:
+	 *  Result "de.adventofcode.day1.Day1.sortSearch":
 	 *   18,709 ±(99.9%) 0,441 us/op [Average]
 	 *   (min, avg, max) = (18,579, 18,709, 18,853), stdev = 0,114
 	 *   CI (99.9%): [18,269, 19,150] (assumes normal distribution)
 	 *
-	 *  With sorting before:
+	 * With sorting before:
 	 *  Result "de.adventofcode.day1.Day1.sortSearch":
 	 *   0,233 ±(99.9%) 0,005 us/op [Average]
 	 *   (min, avg, max) = (0,231, 0,233, 0,234), stdev = 0,001
