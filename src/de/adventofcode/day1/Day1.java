@@ -151,7 +151,7 @@ public class Day1 implements Challenge
 		return null;
 	}
 
-	private static Optional<Doublet<Integer>> miniSearchSort(Map<Integer, Integer> input)
+	private static Optional<Doublet<Integer>> streamSearch(Map<Integer, Integer> input)
 	{
 		return input.keySet()
 				.stream()
@@ -190,7 +190,7 @@ public class Day1 implements Challenge
 	@Override
 	public int solvePart1()
 	{
-		final Optional<Doublet<Integer>> optional = miniSearchSort(getMap());
+		final Optional<Doublet<Integer>> optional = streamSearch(getMap());
 		if (optional.isEmpty())
 		{
 			throw new RuntimeException("Search Went Wrong");
