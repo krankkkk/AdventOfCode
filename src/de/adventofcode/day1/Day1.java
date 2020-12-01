@@ -4,15 +4,11 @@ import de.adventofcode.Challenge;
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.infra.Blackhole;
 
-import javax.print.DocFlavor;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 /**
  * # JMH version: 1.26
@@ -68,9 +64,9 @@ public class Day1 implements Challenge
 	/**
 	 * Sorting within the Method:
 	 *  Result "de.adventofcode.day1.Day1.sortSearch":
-	 *   17,958 ±(99.9%) 0,375 us/op [Average]
-	 *   (min, avg, max) = (17,860, 17,958, 18,110), stdev = 0,097
-	 *   CI (99.9%): [18,303, 18,686] (assumes normal distribution)
+	 *   17,106 ±(99.9%) 0,328 us/op [Average]
+	 *   (min, avg, max) = (17,001, 17,106, 17,224), stdev = 0,085
+	 *   CI (99.9%): [16,778, 17,434] (assumes normal distribution)
 	 *
 	 * With sorting before:
 	 *  Result "de.adventofcode.day1.Day1.sortSearch":
@@ -150,12 +146,12 @@ public class Day1 implements Challenge
 		return null;
 	}
 
-	private static Doublet<Integer> miniSearchSort(final List<Integer> input)
+	private static Doublet<Integer> miniSearchSort(Map<Integer, Integer> input)
 	{
-		for (final Integer i : input)
+		for (final Integer i : input.keySet())
 		{
-			final int rest = 2020-i;
-			if (input.contains(rest))
+			final int rest = 2020 - i;
+			if (input.get(rest) != null)
 			{
 				return new Doublet<>(i, rest);
 			}
@@ -196,7 +192,7 @@ public class Day1 implements Challenge
 	@Override
 	public int solvePart1()
 	{
-		final Doublet<Integer> doublet = miniSearchSort(getInput());
+		final Doublet<Integer> doublet = miniSearchSort(getMap());
 		if (doublet == null)
 		{
 			throw new RuntimeException("Search Went Wrong");
@@ -216,6 +212,12 @@ public class Day1 implements Challenge
 		}
 
 		return triplet.one * triplet.two * triplet.three;
+	}
+
+	@Override
+	public String toString()
+	{
+		return "Day1{" + "Part1: " + this.solvePart1() + " Part2: " + this.solvePart2() + "}";
 	}
 
 	private static class Doublet<T>
