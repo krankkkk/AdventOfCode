@@ -1,8 +1,10 @@
 package de.adventofcode.day1;
 
+import de.adventofcode.Challenge;
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.infra.Blackhole;
 
+import javax.print.DocFlavor;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -16,13 +18,12 @@ import java.util.stream.Collectors;
  * # JMH version: 1.26
  * # VM version: JDK 15, OpenJDK 64-Bit Server VM, 15+36
  * <p>
- * Benchmark           Mode  Cnt    Score   Error  Units
- * Day1.defaultSearch  avgt    5  225,546 ± 3,132  us/op
- * Day1.mapSearch      avgt    5   16,677 ± 0,417  us/op
- * Day1.sortSearch     avgt    5   17,958 ± 0,375  us/op <- Sorting in Method
- * Day1.sortSearch     avgt    5    0,152 ± 0,008  us/op <- Sorting before
+ * Benchmark                    Mode  Cnt    Score    Error  Units
+ * Day1.benchmarkDefaultSearch  avgt    5  264,391 ± 17,445  us/op
+ * Day1.benchmarkMapSearch      avgt    5    2,512 ±  0,040  us/op
+ * Day1.benchmarkSortSearch     avgt    5   17,106 ±  0,328  us/op
  */
-public class Day1
+public class Day1 implements Challenge
 {
 	@Benchmark
 	@OutputTimeUnit(TimeUnit.MICROSECONDS)
@@ -36,28 +37,9 @@ public class Day1
 	 *   (min, avg, max) = (16,546, 16,677, 16,805), stdev = 0,108
 	 *   CI (99.9%): [16,261, 17,094] (assumes normal distribution)
 	 */
-	public static void mapSearch(final MapWrapper inputWrapper,
-	                             final Blackhole blackhole)
+	public static void benchmarkMapSearch(final Blackhole blackhole)
 	{
-		final Map<Integer, Integer> input = inputWrapper.map;
-		for (final Integer outer : input.keySet())
-		{
-			for (final Integer middle : input.keySet())
-			{
-				if (outer + middle > 2020)
-				{
-					continue;
-				}
-
-				final int rest = 2020 - outer - middle;
-
-				if (input.get(rest) != null)
-				{
-					blackhole.consume(new Triplet<>(outer, middle, rest));
-					return;
-				}
-			}
-		}
+		blackhole.consume(getMap());
 	}
 
 	@Benchmark
@@ -72,29 +54,13 @@ public class Day1
 	 *   (min, avg, max) = (264,324, 265,333, 266,582), stdev = 1,025
 	 *   CI (99.9%): [261,386, 269,281] (assumes normal distribution)
 	 */
-	public static void defaultSearch(final ListWrapper inputWrapper,
-	                                 final Blackhole blackhole)
+	public static void benchmarkDefaultSearch(final Blackhole blackhole)
 	{
-		final List<Integer> input = inputWrapper.list;
-		for (final Integer outer : input)
-		{
-			for (final Integer middle : input)
-			{
-				for (final Integer inner : input)
-				{
-					if (outer + middle + inner == 2020)
-					{
-						blackhole.consume(new Triplet<>(outer, middle, inner));
-						return;
-					}
-				}
-			}
-		}
+		blackhole.consume(defaultSearch(getInput()));
 	}
 
-
 	@Benchmark
-	@OutputTimeUnit(TimeUnit.NANOSECONDS)
+	@OutputTimeUnit(TimeUnit.MICROSECONDS)
 	@Warmup(iterations = 3)
 	@Measurement(iterations = 5)
 	@BenchmarkMode(Mode.AverageTime)
@@ -112,72 +78,156 @@ public class Day1
 	 *   (min, avg, max) = (138,747, 139,844, 141,744), stdev = 1,259
 	 *   CI (99.9%): [134,996, 144,692] (assumes normal distribution)
 	 */
-	public static void sortSearch(final ArrayWrapper inputWrapper,
-	                              final Blackhole blackhole)
+	public static void benchmarkSortSearch(final Blackhole blackhole)
 	{
-		final Integer[] objects = inputWrapper.array;
+		final Integer[] array = getArray();
+		Arrays.sort(array);
+		blackhole.consume(sortSearch(array));
+	}
 
-		for (int i = 0; i < objects.length; i++)
+	private static Triplet<Integer> mapSearch(final Map<Integer, Integer> input)
+	{
+		for (final Integer outer : input.keySet())
 		{
-			final Integer first = objects[i];
-			final int maxSecond = 2020 - first;
-			final int location = Math.abs(Arrays.binarySearch(objects, maxSecond));
-
-			for (int j = i; j < location; j++)
+			for (final Integer middle : input.keySet())
 			{
-				final Integer second = objects[j];
-
-				final int rest = 2020 - first - second;
-				final int locationLast = Math.abs(Arrays.binarySearch(objects, rest));
-
-				final Integer last = objects[locationLast];
-				if (last == rest)
+				if (outer + middle > 2020)
 				{
-					blackhole.consume(new Triplet<>(first, second, last));
-					return;
+					continue;
+				}
+
+				final int rest = 2020 - outer - middle;
+
+				if (input.get(rest) != null)
+				{
+					return new Triplet<>(outer, middle, rest);
 				}
 			}
 		}
+		return null;
 	}
 
-	@State(Scope.Benchmark)
-	public static class ListWrapper
+	private static Triplet<Integer> defaultSearch(final List<Integer> input)
 	{
-		List<Integer> list = null;
-
-		@Setup(Level.Invocation)
-		public void setup()
+		for (final Integer outer : input)
 		{
-			this.list = getInput();
+			for (final Integer middle : input)
+			{
+				for (final Integer inner : input)
+				{
+					if (outer + middle + inner == 2020)
+					{
+						return new Triplet<>(outer, middle, inner);
+					}
+				}
+			}
 		}
+		return null;
 	}
 
-	@State(Scope.Benchmark)
-	public static class ArrayWrapper
+	private static Triplet<Integer> sortSearch(final Integer[] sorted)
 	{
-		Integer[] array = null;
-
-		@Setup(Level.Invocation)
-		public void setup()
+		for (int i = 0; i < sorted.length; i++)
 		{
-			final Integer[] arr = getInput().toArray(new Integer[0]);
-			Arrays.sort(arr);
-			this.array = arr;
+			final Integer first = sorted[i];
+			final int maxSecond = 2020 - first;
+			final int location = Math.abs(Arrays.binarySearch(sorted, maxSecond));
+
+			for (int j = i; j < location; j++)
+			{
+				final Integer second = sorted[j];
+
+				final int rest = 2020 - first - second;
+				final int locationLast = Math.abs(Arrays.binarySearch(sorted, rest));
+
+				final Integer last = sorted[locationLast];
+				if (last == rest)
+				{
+					return new Triplet<>(first, second, last);
+				}
+			}
 		}
+		return null;
 	}
 
-	@State(Scope.Benchmark)
-	public static class MapWrapper
+	private static Doublet<Integer> miniSearchSort(final List<Integer> input)
 	{
-		Map<Integer, Integer> map = null;
-
-		@Setup(Level.Invocation)
-		public void setup()
+		for (final Integer i : input)
 		{
-			final List<Integer> input = getInput();
-			final Map<Integer, Integer> temp = new HashMap<>(input.size());
-			input.forEach(i -> temp.put(i, i));
-			this.map = Collections.unmodifiableMap(temp);
+			final int rest = 2020-i;
+			if (input.contains(rest))
+			{
+				return new Doublet<>(i, rest);
+			}
+		}
+		return null;
+	}
+
+	private static Map<Integer, Integer> getMap()
+	{
+		final List<Integer> input = getInput();
+		final Map<Integer, Integer> temp = new HashMap<>(input.size());
+		input.forEach(i -> temp.put(i, i));
+		return temp;
+	}
+
+	private static Integer[] getArray()
+	{
+		return getInput().toArray(new Integer[0]);
+	}
+
+
+	private static List<Integer> getInput()
+	{
+		return InputDay1.input;
+		/*
+		try (BufferedReader reader = new BufferedReader(new FileReader(new File(Day1.class.getResource("input.txt").toURI()))))
+		{
+			return reader.lines().map(Integer::parseInt).collect(Collectors.toList());
+		}
+		catch (IOException | URISyntaxException e)
+		{
+			e.printStackTrace();
+		}
+		return Collections.emptyList();
+		 */
+	}
+
+	@Override
+	public int solvePart1()
+	{
+		final Doublet<Integer> doublet = miniSearchSort(getInput());
+		if (doublet == null)
+		{
+			throw new RuntimeException("Search Went Wrong");
+		}
+		return doublet.one * doublet.two;
+	}
+
+	@Override
+	public int solvePart2()
+	{
+		final Integer[] array = getArray();
+		Arrays.sort(array);
+		final Triplet<Integer> triplet = sortSearch(array);
+		if (triplet == null)
+		{
+			throw new RuntimeException("Search Went Wrong");
+		}
+
+		return triplet.one * triplet.two * triplet.three;
+	}
+
+	private static class Doublet<T>
+	{
+		final T one;
+		final T two;
+
+		public Doublet(final T one,
+		               final T two)
+		{
+			this.one = one;
+			this.two = two;
 		}
 	}
 
@@ -197,16 +247,4 @@ public class Day1
 		}
 	}
 
-	private static List<Integer> getInput()
-	{
-		try (BufferedReader reader = new BufferedReader(new FileReader(new File(Day1.class.getResource("input.txt").toURI()))))
-		{
-			return reader.lines().map(Integer::parseInt).collect(Collectors.toList());
-		}
-		catch (IOException | URISyntaxException e)
-		{
-			e.printStackTrace();
-		}
-		return Collections.emptyList();
-	}
 }
