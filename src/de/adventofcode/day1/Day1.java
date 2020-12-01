@@ -19,8 +19,8 @@ import java.util.stream.Collectors;
  * Benchmark           Mode  Cnt    Score   Error  Units
  * Day1.defaultSearch  avgt    5  225,546 ± 3,132  us/op
  * Day1.mapSearch      avgt    5   16,677 ± 0,417  us/op
- * Day1.sortSearch     avgt    5   18,709 ± 0,441  us/op <- Sorting in Method
- * Day1.sortSearch     avgt    5    0,176 ± 0,009  us/op <- Sorting before
+ * Day1.sortSearch     avgt    5   17,958 ± 0,375  us/op <- Sorting in Method
+ * Day1.sortSearch     avgt    5    0,152 ± 0,008  us/op <- Sorting before
  */
 public class Day1
 {
@@ -108,9 +108,9 @@ public class Day1
 	 *
 	 * With sorting before:
 	 *  Result "de.adventofcode.day1.Day1.sortSearch":
-	 *   167,499 ±(99.9%) 1,286 ns/op [Average]
-	 *   (min, avg, max) = (167,105, 167,499, 167,873), stdev = 0,334
-	 *   CI (99.9%): [166,213, 168,785] (assumes normal distribution)
+	 *   152,562 ±(99.9%) 7,977 ns/op [Average]
+	 *   (min, avg, max) = (150,487, 152,562, 155,154), stdev = 2,072
+	 *   CI (99.9%): [144,585, 160,539] (assumes normal distribution)
 	 */
 	public static void sortSearch(final ArrayWrapper inputWrapper,
 	                              final Blackhole blackhole)
@@ -135,9 +135,10 @@ public class Day1
 				final int rest = 2020 - first - second;
 				final int locationLast = Math.abs(Arrays.binarySearch(objects, rest));
 
-				if (objects[locationLast] == rest)
+				final Integer last = objects[locationLast];
+				if (last == rest)
 				{
-					blackhole.consume(new Triplet<>(first, second, objects[locationLast]));
+					blackhole.consume(new Triplet<>(first, second, last));
 					return;
 				}
 			}
