@@ -151,17 +151,13 @@ public class Day1 implements Challenge
 		return null;
 	}
 
-	private static Doublet<Integer> miniSearchSort(Map<Integer, Integer> input)
+	private static Optional<Doublet<Integer>> miniSearchSort(Map<Integer, Integer> input)
 	{
-		for (final Integer i : input.keySet())
-		{
-			final int rest = 2020 - i;
-			if (input.get(rest) != null)
-			{
-				return new Doublet<>(i, rest);
-			}
-		}
-		return null;
+		return input.keySet()
+				.stream()
+				.filter(in -> input.get(2020 - in) != null)
+				.findFirst()
+				.map(i -> new Doublet<>(i, 2020 - i));
 	}
 
 	private static Map<Integer, Integer> getMap()
@@ -194,11 +190,12 @@ public class Day1 implements Challenge
 	@Override
 	public int solvePart1()
 	{
-		final Doublet<Integer> doublet = miniSearchSort(getMap());
-		if (doublet == null)
+		final Optional<Doublet<Integer>> optional = miniSearchSort(getMap());
+		if (optional.isEmpty())
 		{
 			throw new RuntimeException("Search Went Wrong");
 		}
+		final Doublet<Integer> doublet = optional.get();
 		return doublet.getOne() * doublet.getTwo();
 	}
 
