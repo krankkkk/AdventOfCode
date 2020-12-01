@@ -151,10 +151,9 @@ public class Day1 implements Challenge
 		return null;
 	}
 
-	private static Optional<Doublet<Integer>> streamSearch(Map<Integer, Integer> input)
+	private static Optional<Doublet<Integer>> streamSearch(List<Integer> input)
 	{
-		return input.keySet()
-				.stream()
+		return input.stream()
 				.filter(in -> input.get(2020 - in) != null)
 				.findFirst()
 				.map(i -> new Doublet<>(i, 2020 - i));
@@ -190,7 +189,7 @@ public class Day1 implements Challenge
 	@Override
 	public int solvePart1()
 	{
-		final Optional<Doublet<Integer>> optional = streamSearch(getMap());
+		final Optional<Doublet<Integer>> optional = streamSearch(getInput());
 		if (optional.isEmpty())
 		{
 			throw new RuntimeException("Search Went Wrong");
