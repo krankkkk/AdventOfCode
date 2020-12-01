@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
  * <p>
  * Benchmark           Mode  Cnt    Score   Error  Units
  * Day1.defaultSearch  avgt    5  225,546 ± 3,132  us/op
- * Day1.mapSearch      avgt    5   21,260 ± 0,557  us/op
+ * Day1.mapSearch      avgt    5   16,677 ± 0,417  us/op
  * Day1.sortSearch     avgt    5   18,709 ± 0,441  us/op <- Sorting in Method
  * Day1.sortSearch     avgt    5    0,176 ± 0,009  us/op <- Sorting before
  */
