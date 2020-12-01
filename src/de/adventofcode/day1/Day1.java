@@ -108,9 +108,9 @@ public class Day1
 	 *
 	 * With sorting before:
 	 *  Result "de.adventofcode.day1.Day1.sortSearch":
-	 *   152,562 ±(99.9%) 7,977 ns/op [Average]
-	 *   (min, avg, max) = (150,487, 152,562, 155,154), stdev = 2,072
-	 *   CI (99.9%): [144,585, 160,539] (assumes normal distribution)
+	 *   139,844 ±(99.9%) 4,848 ns/op [Average]
+	 *   (min, avg, max) = (138,747, 139,844, 141,744), stdev = 1,259
+	 *   CI (99.9%): [134,996, 144,692] (assumes normal distribution)
 	 */
 	public static void sortSearch(final ArrayWrapper inputWrapper,
 	                              final Blackhole blackhole)
@@ -126,11 +126,6 @@ public class Day1
 			for (int j = i; j < location; j++)
 			{
 				final Integer second = objects[j];
-
-				if (first + second > 2020)
-				{
-					continue;
-				}
 
 				final int rest = 2020 - first - second;
 				final int locationLast = Math.abs(Arrays.binarySearch(objects, rest));
