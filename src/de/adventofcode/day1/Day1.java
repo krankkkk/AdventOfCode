@@ -94,39 +94,38 @@ public class Day1
 
 
 	@Benchmark
-	@OutputTimeUnit(TimeUnit.MICROSECONDS)
-	@Warmup(iterations = 2)
+	@OutputTimeUnit(TimeUnit.NANOSECONDS)
+	@Warmup(iterations = 3)
 	@Measurement(iterations = 5)
 	@BenchmarkMode(Mode.AverageTime)
 	@Fork(value = 1)
 	/**
 	 * Sorting within the Method:
 	 *  Result "de.adventofcode.day1.Day1.sortSearch":
-	 *   18,709 ±(99.9%) 0,441 us/op [Average]
-	 *   (min, avg, max) = (18,579, 18,709, 18,853), stdev = 0,114
-	 *   CI (99.9%): [18,269, 19,150] (assumes normal distribution)
+	 *   17,958 ±(99.9%) 0,375 us/op [Average]
+	 *   (min, avg, max) = (17,860, 17,958, 18,110), stdev = 0,097
+	 *   CI (99.9%): [18,303, 18,686] (assumes normal distribution)
 	 *
 	 * With sorting before:
 	 *  Result "de.adventofcode.day1.Day1.sortSearch":
-	 *   0,233 ±(99.9%) 0,005 us/op [Average]
-	 *   (min, avg, max) = (0,231, 0,233, 0,234), stdev = 0,001
-	 *   CI (99.9%): [0,228, 0,238] (assumes normal distribution)
+	 *   167,499 ±(99.9%) 1,286 ns/op [Average]
+	 *   (min, avg, max) = (167,105, 167,499, 167,873), stdev = 0,334
+	 *   CI (99.9%): [166,213, 168,785] (assumes normal distribution)
 	 */
 	public static void sortSearch(final ArrayWrapper inputWrapper,
 	                              final Blackhole blackhole)
 	{
-		final List<Integer> input = inputWrapper.list;
-		final Object[] objects = inputWrapper.array;
+		final Integer[] objects = inputWrapper.array;
 
-		for (int i = 0; i < input.size(); i++)
+		for (int i = 0; i < objects.length; i++)
 		{
-			final Integer first = input.get(i);
+			final Integer first = objects[i];
 			final int maxSecond = 2020 - first;
 			final int location = Math.abs(Arrays.binarySearch(objects, maxSecond));
 
-			for (int j = 0; j < location; j++)
+			for (int j = i; j < location; j++)
 			{
-				final Integer second = input.get(j);
+				final Integer second = objects[j];
 
 				if (first + second > 2020)
 				{
@@ -136,9 +135,9 @@ public class Day1
 				final int rest = 2020 - first - second;
 				final int locationLast = Math.abs(Arrays.binarySearch(objects, rest));
 
-				if (input.get(locationLast) == rest)
+				if (objects[locationLast] == rest)
 				{
-					blackhole.consume(new Triplet<>(first, second, input.get(locationLast)));
+					blackhole.consume(new Triplet<>(first, second, objects[locationLast]));
 					return;
 				}
 			}
@@ -148,7 +147,7 @@ public class Day1
 	@State(Scope.Benchmark)
 	public static class ListWrapper
 	{
-		List<Integer> list;
+		List<Integer> list = null;
 
 		@Setup(Level.Invocation)
 		public void setup()
@@ -160,22 +159,21 @@ public class Day1
 	@State(Scope.Benchmark)
 	public static class ArrayWrapper
 	{
-		List<Integer> list;
-		Object[] array;
+		Integer[] array = null;
 
 		@Setup(Level.Invocation)
 		public void setup()
 		{
-			this.list = getInput();
-			Collections.sort(this.list);
-			this.array = this.list.toArray();
+			final Integer[] arr = getInput().toArray(new Integer[0]);
+			Arrays.sort(arr);
+			this.array = arr;
 		}
 	}
 
 	@State(Scope.Benchmark)
 	public static class MapWrapper
 	{
-		Map<Integer, Integer> map;
+		Map<Integer, Integer> map = null;
 
 		@Setup(Level.Invocation)
 		public void setup()
