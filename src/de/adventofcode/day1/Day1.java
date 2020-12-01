@@ -7,7 +7,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.lang.annotation.Inherited;
 import java.net.URISyntaxException;
 import java.util.Collections;
 import java.util.HashMap;
@@ -127,7 +126,9 @@ public class Day1
 		final T two;
 		final T three;
 
-		public Triplet(T one, T two, T three)
+		public Triplet(final T one,
+		               final T two,
+		               final T three)
 		{
 			this.one = one;
 			this.two = two;
