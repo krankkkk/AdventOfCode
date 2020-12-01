@@ -1,23 +1,28 @@
 package de.adventofcode.day1;
 
 import de.adventofcode.Challenge;
+import de.adventofcode.util.Doublet;
+import de.adventofcode.util.Triplet;
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.infra.Blackhole;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 /**
  * # JMH version: 1.26
  * # VM version: JDK 15, OpenJDK 64-Bit Server VM, 15+36
  * <p>
  * Benchmark                    Mode  Cnt    Score    Error  Units
- * Day1.benchmarkDefaultSearch  avgt    5  264,391 ± 17,445  us/op
- * Day1.benchmarkMapSearch      avgt    5    2,512 ±  0,040  us/op
- * Day1.benchmarkSortSearch     avgt    5   17,106 ±  0,328  us/op
+ * Day1.benchmarkDefaultSearch  avgt    5  268,633 ± 41,637  us/op
+ * Day1.benchmarkMapSearch      avgt    5   21,257 ±  0,355  us/op
+ * Day1.benchmarkSortSearch     avgt    5   17,250 ±  0,380  us/op
  */
 public class Day1 implements Challenge
 {
@@ -35,7 +40,7 @@ public class Day1 implements Challenge
 	 */
 	public static void benchmarkMapSearch(final Blackhole blackhole)
 	{
-		blackhole.consume(getMap());
+		blackhole.consume(mapSearch(getMap()));
 	}
 
 	@Benchmark
@@ -175,8 +180,6 @@ public class Day1 implements Challenge
 
 	private static List<Integer> getInput()
 	{
-		return InputDay1.input;
-		/*
 		try (BufferedReader reader = new BufferedReader(new FileReader(new File(Day1.class.getResource("input.txt").toURI()))))
 		{
 			return reader.lines().map(Integer::parseInt).collect(Collectors.toList());
@@ -186,7 +189,6 @@ public class Day1 implements Challenge
 			e.printStackTrace();
 		}
 		return Collections.emptyList();
-		 */
 	}
 
 	@Override
@@ -197,7 +199,7 @@ public class Day1 implements Challenge
 		{
 			throw new RuntimeException("Search Went Wrong");
 		}
-		return doublet.one * doublet.two;
+		return doublet.getOne() * doublet.getTwo();
 	}
 
 	@Override
@@ -211,42 +213,13 @@ public class Day1 implements Challenge
 			throw new RuntimeException("Search Went Wrong");
 		}
 
-		return triplet.one * triplet.two * triplet.three;
+		return triplet.getOne() * triplet.getTwo() * triplet.getThree();
 	}
 
 	@Override
 	public String toString()
 	{
 		return "Day1{" + "Part1: " + this.solvePart1() + " Part2: " + this.solvePart2() + "}";
-	}
-
-	private static class Doublet<T>
-	{
-		final T one;
-		final T two;
-
-		public Doublet(final T one,
-		               final T two)
-		{
-			this.one = one;
-			this.two = two;
-		}
-	}
-
-	private static class Triplet<T>
-	{
-		final T one;
-		final T two;
-		final T three;
-
-		public Triplet(final T one,
-		               final T two,
-		               final T three)
-		{
-			this.one = one;
-			this.two = two;
-			this.three = three;
-		}
 	}
 
 }
