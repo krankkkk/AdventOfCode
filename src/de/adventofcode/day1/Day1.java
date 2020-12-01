@@ -8,10 +8,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -93,6 +90,58 @@ public class Day1
 		}
 	}
 
+
+	@Benchmark
+	@OutputTimeUnit(TimeUnit.MICROSECONDS)
+	@Warmup(iterations = 2)
+	@Measurement(iterations = 5)
+	@BenchmarkMode(Mode.AverageTime)
+	@Fork(value = 1)
+	/**
+	 * Result "de.adventofcode.day1.Day1.sortSearch":
+	 *   18,709 ±(99.9%) 0,441 us/op [Average]
+	 *   (min, avg, max) = (18,579, 18,709, 18,853), stdev = 0,114
+	 *   CI (99.9%): [18,269, 19,150] (assumes normal distribution)
+	 *
+	 *  With sorting before:
+	 *  Result "de.adventofcode.day1.Day1.sortSearch":
+	 *   0,233 ±(99.9%) 0,005 us/op [Average]
+	 *   (min, avg, max) = (0,231, 0,233, 0,234), stdev = 0,001
+	 *   CI (99.9%): [0,228, 0,238] (assumes normal distribution)
+	 */
+	public static void sortSearch(final ArrayWrapper inputWrapper,
+	                              final Blackhole blackhole)
+	{
+		final List<Integer> input = inputWrapper.list;
+		final Object[] objects = inputWrapper.array;
+
+		for (int i = 0; i < input.size(); i++)
+		{
+			final Integer first = input.get(i);
+			final int maxSecond = 2020 - first;
+			final int location = Math.abs(Arrays.binarySearch(objects, maxSecond));
+
+			for (int j = 0; j < location; j++)
+			{
+				final Integer second = input.get(j);
+
+				if (first + second > 2020)
+				{
+					continue;
+				}
+
+				final int rest = 2020 - first - second;
+				final int locationLast = Math.abs(Arrays.binarySearch(objects, rest));
+
+				if (input.get(locationLast) == rest)
+				{
+					blackhole.consume(new Triplet<>(first, second, input.get(locationLast)));
+					return;
+				}
+			}
+		}
+	}
+
 	@State(Scope.Benchmark)
 	public static class ListWrapper
 	{
@@ -106,6 +155,21 @@ public class Day1
 	}
 
 	@State(Scope.Benchmark)
+	public static class ArrayWrapper
+	{
+		List<Integer> list;
+		Object[] array;
+
+		@Setup(Level.Invocation)
+		public void setup()
+		{
+			this.list = getInput();
+			Collections.sort(this.list);
+			this.array = this.list.toArray();
+		}
+	}
+
+	@State(Scope.Benchmark)
 	public static class MapWrapper
 	{
 		Map<Integer, Integer> map;
@@ -114,9 +178,9 @@ public class Day1
 		public void setup()
 		{
 			final List<Integer> input = getInput();
-			final Map<Integer, Integer> map = new HashMap<>(input.size());
-			input.forEach(i -> map.put(i, i));
-			this.map = map;
+			final Map<Integer, Integer> temp = new HashMap<>(input.size());
+			input.forEach(i -> temp.put(i, i));
+			this.map = Collections.unmodifiableMap(temp);
 		}
 	}
 
@@ -140,7 +204,7 @@ public class Day1
 	{
 		try (BufferedReader reader = new BufferedReader(new FileReader(new File(Day1.class.getResource("input.txt").toURI()))))
 		{
-			return reader.lines().map(Integer::parseInt).collect(Collectors.toUnmodifiableList());
+			return reader.lines().map(Integer::parseInt).collect(Collectors.toList());
 		}
 		catch (IOException | URISyntaxException e)
 		{
