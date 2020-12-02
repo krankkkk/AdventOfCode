@@ -21,12 +21,6 @@ public class Day2 extends Day
 		return (int) getInput().stream().filter(Day2::isValidPart1).count();
 	}
 
-	@Override
-	public int solvePart2()
-	{
-		return (int) getInput().stream().filter(Day2::isValidPart2).count();
-	}
-
 	private static boolean isValidPart1(final String line)
 	{
 		final String[] s = line.split(" ");
@@ -38,6 +32,12 @@ public class Day2 extends Day
 		return count[0] <= counter && count[1] >= counter;
 	}
 
+	@Override
+	public int solvePart2()
+	{
+		return (int) getInput().stream().filter(Day2::isValidPart2).count();
+	}
+
 	private static boolean isValidPart2(final String line)
 	{
 		final String[] s = line.split(" ");
@@ -47,8 +47,7 @@ public class Day2 extends Day
 
 		final int firstCharacter = place[0] - 1;
 		final int secondCharacter = place[1] - 1;
-		return (password[firstCharacter] == letter && password[secondCharacter] != letter) ||
-		       (password[secondCharacter] == letter && password[firstCharacter] != letter);
+		return password[firstCharacter] == letter ^ password[secondCharacter] == letter;
 	}
 
 

@@ -12,6 +12,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -22,7 +24,8 @@ import java.util.stream.Collectors;
  * Benchmark                    Mode  Cnt    Score    Error  Units
  * Day1.benchmarkDefaultSearch  avgt    5  268,633 ± 41,637  us/op
  * Day1.benchmarkMapSearch      avgt    5   21,257 ±  0,355  us/op
- * Day1.benchmarkSortSearch     avgt    5   17,250 ±  0,380  us/op
+ * Day1.benchmarkSortSearch     avgt    5   4,376  ±  0,030  us/op
+ * Day1.benchmarkSortedSearch   avgt    5  75,375  ±  1,366  ns/op
  */
 public class Day1 extends Day
 {
@@ -34,13 +37,13 @@ public class Day1 extends Day
 	@Fork(value = 1)
 	/**
 	 * Result "de.adventofcode.day1.Day1.containsSearch":
-	 *   16,677 ±(99.9%) 0,417 us/op [Average]
-	 *   (min, avg, max) = (16,546, 16,677, 16,805), stdev = 0,108
-	 *   CI (99.9%): [16,261, 17,094] (assumes normal distribution)
+	 *   21,206 ±(99.9%) 0,195 us/op [Average]
+	 *   (min, avg, max) = (21,165, 21,206, 21,284), stdev = 0,051
+	 *   CI (99.9%): [21,012, 21,401] (assumes normal distribution)
 	 */
-	public static void benchmarkMapSearch(final Blackhole blackhole)
+	public static void benchmarkMapSearch(final InputWrapper wrapper, final Blackhole blackhole)
 	{
-		blackhole.consume(mapSearch(getMap()));
+		blackhole.consume(mapSearch(getMap(wrapper.input)));
 	}
 
 	@Benchmark
@@ -51,13 +54,13 @@ public class Day1 extends Day
 	@Fork(value = 1)
 	/**
 	 * Result "de.adventofcode.day1.Day1.defaultSearch":
-	 *   265,333 ±(99.9%) 3,947 us/op [Average]
-	 *   (min, avg, max) = (264,324, 265,333, 266,582), stdev = 1,025
-	 *   CI (99.9%): [261,386, 269,281] (assumes normal distribution)
+	 *   224,174 ±(99.9%) 27,789 us/op [Average]
+	 *   (min, avg, max) = (220,638, 224,174, 237,079), stdev = 7,217
+	 *   CI (99.9%): [196,384, 251,963] (assumes normal distribution)
 	 */
-	public static void benchmarkDefaultSearch(final Blackhole blackhole)
+	public static void benchmarkDefaultSearch(final InputWrapper wrapper, final Blackhole blackhole)
 	{
-		blackhole.consume(defaultSearch(getInput()));
+		blackhole.consume(defaultSearch(wrapper.input));
 	}
 
 	@Benchmark
@@ -69,21 +72,34 @@ public class Day1 extends Day
 	/**
 	 * Sorting within the Method:
 	 *  Result "de.adventofcode.day1.Day1.sortSearch":
-	 *   17,106 ±(99.9%) 0,328 us/op [Average]
-	 *   (min, avg, max) = (17,001, 17,106, 17,224), stdev = 0,085
-	 *   CI (99.9%): [16,778, 17,434] (assumes normal distribution)
+	 *  4,376 ±(99.9%) 0,030 us/op [Average]
+	 *   (min, avg, max) = (4,365, 4,376, 4,385), stdev = 0,008
+	 *   CI (99.9%): [4,346, 4,406] (assumes normal distribution)
 	 *
-	 * With sorting before:
-	 *  Result "de.adventofcode.day1.Day1.sortSearch":
-	 *   139,844 ±(99.9%) 4,848 ns/op [Average]
-	 *   (min, avg, max) = (138,747, 139,844, 141,744), stdev = 1,259
-	 *   CI (99.9%): [134,996, 144,692] (assumes normal distribution)
 	 */
-	public static void benchmarkSortSearch(final Blackhole blackhole)
+	public static void benchmarkSortSearch(final InputWrapper wrapper, final Blackhole blackhole)
 	{
-		final Integer[] array = getArray();
-		Arrays.sort(array);
+		final Integer[] array = getArray(wrapper.input);
+		quickSort(array, 0, array.length - 1);
 		blackhole.consume(sortSearch(array));
+	}
+
+	@Benchmark
+	@OutputTimeUnit(TimeUnit.NANOSECONDS)
+	@Warmup(iterations = 3)
+	@Measurement(iterations = 5)
+	@BenchmarkMode(Mode.AverageTime)
+	@Fork(value = 1)
+
+	/**
+	 * Result "de.adventofcode.day1.Day1.benchmarkSortedSearch":
+	 *   75,375 ±(99.9%) 1,366 ns/op [Average]
+	 *   (min, avg, max) = (74,889, 75,375, 75,846), stdev = 0,355
+	 *   CI (99.9%): [74,009, 76,741] (assumes normal distribution)
+	 */
+	public static void benchmarkSortedSearch(final SortedWrapper wrapper, final Blackhole blackhole)
+	{
+		blackhole.consume(sortSearch(wrapper.input));
 	}
 
 	private static Triplet<Integer> mapSearch(final Map<Integer, Integer> input)
@@ -159,17 +175,17 @@ public class Day1 extends Day
 				.map(i -> new Doublet<>(i, 2020 - i));
 	}
 
-	private static Map<Integer, Integer> getMap()
+
+	private static Map<Integer, Integer> getMap(final List<Integer> input)
 	{
-		final List<Integer> input = getInput();
 		final Map<Integer, Integer> temp = new HashMap<>(input.size());
 		input.forEach(i -> temp.put(i, i));
 		return temp;
 	}
 
-	private static Integer[] getArray()
+	private static Integer[] getArray(final List<Integer> input)
 	{
-		return getInput().toArray(new Integer[0]);
+		return input.toArray(new Integer[0]);
 	}
 
 
@@ -184,6 +200,64 @@ public class Day1 extends Day
 			e.printStackTrace();
 		}
 		return Collections.emptyList();
+	}
+
+	public static int partition(Integer[] a, int beg, int end)
+	{
+
+		int left, right, temp, loc, flag;
+		loc = left = beg;
+		right = end;
+		flag = 0;
+		while (flag != 1)
+		{
+			while ((a[loc] <= a[right]) && (loc != right))
+			{
+				right--;
+			}
+			if (loc == right)
+			{
+				flag = 1;
+			}
+			else if (a[loc] > a[right])
+			{
+				temp = a[loc];
+				a[loc] = a[right];
+				a[right] = temp;
+				loc = right;
+			}
+			if (flag != 1)
+			{
+				while ((a[loc] >= a[left]) && (loc != left))
+				{
+					left++;
+				}
+				if (loc == left)
+				{
+					flag = 1;
+				}
+				else if (a[loc] < a[left])
+				{
+					temp = a[loc];
+					a[loc] = a[left];
+					a[left] = temp;
+					loc = left;
+				}
+			}
+		}
+		return loc;
+	}
+
+	static void quickSort(Integer[] a, int beg, int end)
+	{
+
+		int loc;
+		if (beg < end)
+		{
+			loc = partition(a, beg, end);
+			quickSort(a, beg, loc - 1);
+			quickSort(a, loc + 1, end);
+		}
 	}
 
 	@Override
@@ -201,7 +275,7 @@ public class Day1 extends Day
 	@Override
 	public int solvePart2()
 	{
-		final Integer[] array = getArray();
+		final Integer[] array = getArray(getInput());
 		Arrays.sort(array);
 		final Triplet<Integer> triplet = sortSearch(array);
 		if (triplet == null)
@@ -210,5 +284,31 @@ public class Day1 extends Day
 		}
 
 		return triplet.getOne() * triplet.getTwo() * triplet.getThree();
+	}
+
+	@State(Scope.Benchmark)
+	public static class InputWrapper
+	{
+		List<Integer> input = null;
+
+		@Setup
+		public void setup()
+		{
+			this.input = getInput();
+		}
+	}
+
+	@State(Scope.Benchmark)
+	public static class SortedWrapper
+	{
+		Integer[] input = null;
+
+		@Setup
+		public void setup()
+		{
+			final Integer[] integers = getArray(getInput());
+			quickSort(integers, 0, integers.length - 1);
+			this.input = integers;
+		}
 	}
 }
