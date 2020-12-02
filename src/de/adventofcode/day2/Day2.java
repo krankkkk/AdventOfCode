@@ -33,7 +33,7 @@ public class Day2 extends Day
 		final int[] count = Arrays.stream(s[0].split("-")).mapToInt(Integer::parseInt).sorted().toArray();
 		final char letter = s[1].charAt(0);
 		final char[] password = s[2].toCharArray();
-		int counter = (int) IntStream.range(0, password.length).filter(i -> password[i] == letter).count();
+		final int counter = (int) IntStream.range(0, password.length).filter(i -> password[i] == letter).count();
 
 		return count[0] <= counter && count[1] >= counter;
 	}
