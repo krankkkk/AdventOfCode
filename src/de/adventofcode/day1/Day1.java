@@ -1,6 +1,6 @@
 package de.adventofcode.day1;
 
-import de.adventofcode.Challenge;
+import de.adventofcode.Day;
 import de.adventofcode.util.Doublet;
 import de.adventofcode.util.Triplet;
 import org.openjdk.jmh.annotations.*;
@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
  * Day1.benchmarkMapSearch      avgt    5   21,257 ±  0,355  us/op
  * Day1.benchmarkSortSearch     avgt    5   17,250 ±  0,380  us/op
  */
-public class Day1 implements Challenge
+public class Day1 extends Day
 {
 	@Benchmark
 	@OutputTimeUnit(TimeUnit.MICROSECONDS)
@@ -211,11 +211,4 @@ public class Day1 implements Challenge
 
 		return triplet.getOne() * triplet.getTwo() * triplet.getThree();
 	}
-
-	@Override
-	public String toString()
-	{
-		return "Day1{" + "Part1: " + this.solvePart1() + " Part2: " + this.solvePart2() + "}";
-	}
-
 }
