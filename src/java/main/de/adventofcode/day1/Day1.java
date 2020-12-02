@@ -6,21 +6,17 @@ import de.adventofcode.util.Triplet;
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.infra.Blackhole;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
+
+import static de.adventofcode.util.ListUtils.mapToInt;
 
 /**
  * # JMH version: 1.26
  * # VM version: JDK 15, OpenJDK 64-Bit Server VM, 15+36
  * <p>
  * Benchmark                    Mode  Cnt    Score    Error  Units
- * Day1.benchmarkDefaultSearch  avgt    5  268,633 ± 41,637  us/op
+ * Day1.benchmarkDefaultSearch  avgt    5  219,784 ± 6,061  us/op
  * Day1.benchmarkMapSearch      avgt    5   21,257 ±  0,355  us/op
  * Day1.benchmarkSortSearch     avgt    5   4,376  ±  0,030  us/op
  * Day1.benchmarkSortedSearch   avgt    5  75,375  ±  1,366  ns/op
@@ -52,9 +48,9 @@ public class Day1 extends Day
 	@Fork(value = 1)
 	/**
 	 * Result "de.adventofcode.day1.Day1.defaultSearch":
-	 *   224,174 ±(99.9%) 27,789 us/op [Average]
-	 *   (min, avg, max) = (220,638, 224,174, 237,079), stdev = 7,217
-	 *   CI (99.9%): [196,384, 251,963] (assumes normal distribution)
+	 *   219,784 ±(99.9%) 6,061 us/op [Average]
+	 *   (min, avg, max) = (217,984, 219,784, 221,995), stdev = 1,574
+	 *   CI (99.9%): [213,723, 225,845] (assumes normal distribution)
 	 */
 	public static void benchmarkDefaultSearch(final InputWrapper wrapper, final Blackhole blackhole)
 	{
@@ -186,20 +182,6 @@ public class Day1 extends Day
 		return input.toArray(new Integer[0]);
 	}
 
-
-	private static List<Integer> getInput()
-	{
-		try (BufferedReader reader = new BufferedReader(new FileReader(new File(Day1.class.getResource("input.txt").toURI()))))
-		{
-			return reader.lines().map(Integer::parseInt).collect(Collectors.toList());
-		}
-		catch (IOException | URISyntaxException e)
-		{
-			e.printStackTrace();
-		}
-		return Collections.emptyList();
-	}
-
 	public static int partition(Integer[] a, int beg, int end)
 	{
 
@@ -261,7 +243,7 @@ public class Day1 extends Day
 	@Override
 	public int solvePart1()
 	{
-		final Optional<Doublet<Integer>> optional = streamSearch(getInput());
+		final Optional<Doublet<Integer>> optional = streamSearch(mapToInt(getInput()));
 		if (optional.isEmpty())
 		{
 			throw new RuntimeException("Search Went Wrong");
@@ -273,7 +255,7 @@ public class Day1 extends Day
 	@Override
 	public int solvePart2()
 	{
-		final Integer[] array = getArray(getInput());
+		final Integer[] array = getArray(mapToInt(getInput()));
 		Arrays.sort(array);
 		final Triplet<Integer> triplet = sortSearch(array);
 		if (triplet == null)
@@ -292,7 +274,7 @@ public class Day1 extends Day
 		@Setup
 		public void setup()
 		{
-			this.input = getInput();
+			this.input = mapToInt(new Day1().getInput());
 		}
 	}
 
@@ -304,7 +286,7 @@ public class Day1 extends Day
 		@Setup
 		public void setup()
 		{
-			final Integer[] integers = getArray(getInput());
+			final Integer[] integers = getArray(mapToInt(new Day1().getInput()));
 			quickSort(integers, 0, integers.length - 1);
 			this.input = integers;
 		}
