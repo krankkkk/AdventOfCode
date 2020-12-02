@@ -38,7 +38,7 @@ public class Day2 extends Day
 		return (int) getInput().stream().filter(Day2::isValidPart2).count();
 	}
 
-	private static boolean isValidPart2(final String line)
+	static boolean isValidPart2(final String line)
 	{
 		final String[] s = line.split(" ");
 		final Integer[] place = Arrays.stream(s[0].split("-")).map(Integer::parseInt).toArray(Integer[]::new);
@@ -51,7 +51,7 @@ public class Day2 extends Day
 	}
 
 
-	private static List<String> getInput()
+	public static List<String> getInput()
 	{
 		try (BufferedReader reader = new BufferedReader(new FileReader(new File(Day2.class.getResource("input.txt").toURI()))))
 		{
