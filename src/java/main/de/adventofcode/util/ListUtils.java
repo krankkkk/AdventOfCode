@@ -13,4 +13,9 @@ public class ListUtils
 	{
 		return strings.stream().map(Integer::parseInt).collect(Collectors.toList());
 	}
+
+	public static List<Long> mapToLong(final List<String> strings)
+	{
+		return strings.stream().map(Long::parseLong).collect(Collectors.toList());
+	}
 }

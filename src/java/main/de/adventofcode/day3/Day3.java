@@ -23,14 +23,12 @@ public class Day3 extends Day
 		for (int i = 0; i < input.length; i = i + STEP_DOWN)
 		{
 			final char[] line = input[i];
-
 			if (place >= line.length)
 			{
 				place -= line.length;
 			}
 
 			final char toCheck = line[place];
-
 			if (toCheck == TREE)
 			{
 				counter++;
