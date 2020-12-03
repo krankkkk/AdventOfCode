@@ -1,7 +1,6 @@
 package de.adventofcode.day1;
 
 import de.adventofcode.Day;
-import de.adventofcode.util.Doublet;
 import de.adventofcode.util.Triplet;
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.infra.Blackhole;
@@ -55,7 +54,7 @@ public class Day1 extends Day
 	 */
 	public static void benchmarkDefaultSearch(final InputWrapper wrapper, final Blackhole blackhole)
 	{
-		blackhole.consume(defaultSearch(wrapper.input));
+		blackhole.consume(defaultSearch(getArray(wrapper.input)));
 	}
 
 	@Benchmark
@@ -74,7 +73,7 @@ public class Day1 extends Day
 	 */
 	public static void benchmarkSortSearch(final InputWrapper wrapper, final Blackhole blackhole)
 	{
-		final Long[] array = getArray(wrapper.input);
+		final long[] array = getArray(wrapper.input);
 		quickSort(array, 0, array.length - 1);
 		blackhole.consume(sortSearch(array));
 	}
@@ -97,18 +96,18 @@ public class Day1 extends Day
 		blackhole.consume(sortSearch(wrapper.input));
 	}
 
-	private static Triplet<Long> mapSearch(final Map<Long, Long> input)
+	private static Triplet<Long> mapSearch(final Map<Long, String> input)
 	{
-		for (final Long outer : input.keySet())
+		for (final long outer : input.keySet())
 		{
-			for (final Long middle : input.keySet())
+			for (final long middle : input.keySet())
 			{
 				if (outer + middle > 2020)
 				{
 					continue;
 				}
 
-				final Long rest = 2020 - outer - middle;
+				final long rest = 2020 - outer - middle;
 
 				if (input.get(rest) != null)
 				{
@@ -119,13 +118,13 @@ public class Day1 extends Day
 		return null;
 	}
 
-	private static Triplet<Long> defaultSearch(final List<Long> input)
+	private static Triplet<Long> defaultSearch(final long[] input)
 	{
-		for (final Long outer : input)
+		for (final long outer : input)
 		{
-			for (final Long middle : input)
+			for (final long middle : input)
 			{
-				for (final Long inner : input)
+				for (final long inner : input)
 				{
 					if (outer + middle + inner == 2020)
 					{
@@ -137,7 +136,7 @@ public class Day1 extends Day
 		return null;
 	}
 
-	private static Triplet<Long> sortSearch(final Long[] sorted)
+	private static long sortSearch(final long[] sorted)
 	{
 		for (int i = 0; i < sorted.length; i++)
 		{
@@ -155,37 +154,48 @@ public class Day1 extends Day
 				final long last = sorted[(int) locationLast];
 				if (last == rest)
 				{
-					return new Triplet<>(first, second, last);
+					return first * second * last;
 				}
 			}
 		}
-		return null;
+		return -1;
 	}
 
-	private static Optional<Doublet<Integer>> streamSearch(List<Integer> input)
+	private static long streamSearch(long[] input)
 	{
-		return input.stream()
-				.filter(in -> input.contains(2020 - in))
-				.findFirst()
-				.map(i -> new Doublet<>(i, 2020 - i));
+		for (final long aLong1 : input)
+		{
+			final long rest = 2020 - aLong1;
+			final int index = Math.abs(Arrays.binarySearch(input, rest));
+			if (input[index] == rest)
+			{
+				return rest * aLong1;
+			}
+		}
+		return -1;
 	}
 
 
-	private static Map<Long, Long> getMap(final List<Long> input)
+	private static Map<Long, String> getMap(final List<String> input)
 	{
-		final Map<Long, Long> temp = new HashMap<>(input.size());
-		input.forEach(i -> temp.put(i, i));
+		final Map<Long, String> temp = new HashMap<>(input.size());
+		input.forEach(i -> temp.put(Long.parseLong(i), i));
 		return temp;
 	}
 
-	private static Long[] getArray(final List<Long> input)
+	private static long[] getArray(final List<String> input)
 	{
-		return input.toArray(new Long[0]);
+		final int size = input.size();
+		final long[] arr = new long[size];
+		for (int i = 0; i < size; i++)
+		{
+			arr[i]= Long.parseLong(input.get(i));
+		}
+		return arr;
 	}
 
-	public static int partition(Long[] a, int beg, int end)
+	public static int partition(long[] a, int beg, int end)
 	{
-
 		int left;
 		int right;
 		long temp;
@@ -233,9 +243,8 @@ public class Day1 extends Day
 		return loc;
 	}
 
-	static void quickSort(Long[] a, int beg, int end)
+	static void quickSort(long[] a, int beg, int end)
 	{
-
 		int loc;
 		if (beg < end)
 		{
@@ -248,38 +257,28 @@ public class Day1 extends Day
 	@Override
 	public long solvePart1()
 	{
-		final Optional<Doublet<Integer>> optional = streamSearch(mapToInt(getInput()));
-		if (optional.isEmpty())
-		{
-			throw new RuntimeException("Search Went Wrong");
-		}
-		final Doublet<Integer> doublet = optional.get();
-		return doublet.getOne() * doublet.getTwo();
+		final long[] array = getArray(getInput());
+		quickSort(array, 0, array.length - 1);
+		return streamSearch(array);
 	}
 
 	@Override
 	public long solvePart2()
 	{
-		final Long[] array = getArray(mapToLong(getInput()));
+		final long[] array = getArray(getInput());
 		quickSort(array, 0, array.length - 1);
-		final Triplet<Long> triplet = sortSearch(array);
-		if (triplet == null)
-		{
-			throw new RuntimeException("Search Went Wrong");
-		}
-
-		return triplet.getOne() * triplet.getTwo() * triplet.getThree();
+		return sortSearch(array);
 	}
 
 	@State(Scope.Benchmark)
 	public static class InputWrapper
 	{
-		List<Long> input = null;
+		List<String> input = null;
 
 		@Setup
 		public void setup()
 		{
-			this.input = mapToLong(new Day1().getInput());
+			this.input = new Day1().getInput();
 			Collections.shuffle(this.input);
 		}
 	}
@@ -287,12 +286,12 @@ public class Day1 extends Day
 	@State(Scope.Benchmark)
 	public static class SortedWrapper
 	{
-		Long[] input = null;
+		long[] input = null;
 
 		@Setup
 		public void setup()
 		{
-			final Long[] integers = mapToLong(new Day1().getInput()).toArray(new Long[0]);
+			final long[] integers = getArray(new Day1().getInput());
 			quickSort(integers, 0, integers.length - 1);
 			this.input = integers;
 		}

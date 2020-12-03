@@ -26,6 +26,6 @@ public class Launcher
 		System.out.println(String.format("%15s%s%15s", "", day.getClass().getSimpleName(), "").replace(' ', '-'));
 		System.out.println("Part 1: " + solutionP1);
 		System.out.println("Part 2: " + solutionP2);
-		System.out.println("Took " + (end-start) + " ms");
+		System.out.println("Took " + (end - start) + " ms");
 	}
 }

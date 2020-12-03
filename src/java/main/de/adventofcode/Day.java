@@ -18,7 +18,6 @@ public abstract class Day implements Challenge
 		return getClass().getSimpleName() + "{" + "Part1: " + this.solvePart1() + " Part2: " + this.solvePart2() + "}";
 	}
 
-
 	protected List<String> getInput()
 	{
 		return getInput("input.txt");

@@ -2,32 +2,36 @@ package de.adventofcode.day2;
 
 import de.adventofcode.Day;
 
-import java.util.Arrays;
-import java.util.stream.IntStream;
-
 public class Day2 extends Day
 {
 	private static boolean isValidPart1(final String line)
 	{
 		final String[] s = line.split(" ");
-		final int[] count = Arrays.stream(s[0].split("-")).mapToInt(Integer::parseInt).sorted().toArray();
+		final String[] count = s[0].split("-");
 		final char letter = s[1].charAt(0);
-		final char[] password = s[2].toCharArray();
-		final int counter = (int) IntStream.range(0, password.length).filter(i -> password[i] == letter).count();
+		int counter = 0;
+		for (char c : s[2].toCharArray())
+		{
+			if (c == letter)
+			{
+				counter++;
+			}
+		}
 
-		return count[0] <= counter && count[1] >= counter;
+		final int min = Integer.parseInt(count[0]);
+		final int max = Integer.parseInt(count[1]);
+		return min <= counter && max >= counter;
 	}
 
 	private static boolean isValidPart2(final String line)
 	{
 		final String[] s = line.split(" ");
-		final Integer[] place = Arrays.stream(s[0].split("-")).map(Integer::parseInt).toArray(Integer[]::new);
+		final String[] place = s[0].split("-");
 		final char letter = s[1].charAt(0);
-		final char[] password = s[2].toCharArray();
 
-		final int firstCharacter = place[0] - 1;
-		final int secondCharacter = place[1] - 1;
-		return password[firstCharacter] == letter ^ password[secondCharacter] == letter;
+		final int firstCharIndex = Integer.parseInt(place[0]) - 1;
+		final int secondCharIndex = Integer.parseInt(place[1]) - 1;
+		return s[2].charAt(firstCharIndex) == letter ^ s[2].charAt(secondCharIndex) == letter;
 	}
 
 	@Override
