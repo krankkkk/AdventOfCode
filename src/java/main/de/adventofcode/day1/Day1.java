@@ -8,18 +8,15 @@ import org.openjdk.jmh.infra.Blackhole;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
-import static de.adventofcode.util.ListUtils.mapToInt;
-import static de.adventofcode.util.ListUtils.mapToLong;
-
 /**
  * # JMH version: 1.26
  * # VM version: JDK 15, OpenJDK 64-Bit Server VM, 15+36
  * <p>
  * Benchmark                    Mode  Cnt    Score    Error  Units
- * Day1.benchmarkDefaultSearch  avgt    5  675,929 ± 174,776  us/op
- * Day1.benchmarkMapSearch      avgt    5   21,585 ±   0,207  us/op
- * Day1.benchmarkSortSearch     avgt    5    4,358 ±   0,076  us/op
- * Day1.benchmarkSortedSearch   avgt    5  75,375  ±   1,366  ns/op (that's 0,034% of the default-search)
+ * Day1.benchmarkDefaultSearch  avgt    5  36,487 ± 0,191  us/op
+ * Day1.benchmarkMapSearch      avgt    5  20,119 ± 0,475  us/op
+ * Day1.benchmarkSortSearch     avgt    5   5,323 ± 0,027  us/op
+ * Day1.benchmarkSortedSearch   avgt    5  38,586 ± 0,464  ns/op
  */
 public class Day1 extends Day
 {
@@ -48,9 +45,9 @@ public class Day1 extends Day
 	@Fork(value = 1)
 	/**
 	 * Result "de.adventofcode.day1.Day1.defaultSearch":
-	 *   675,929 ±(99.9%) 174,776 us/op [Average]
-	 *   (min, avg, max) = (623,864, 675,929, 719,857), stdev = 45,389
-	 *   CI (99.9%): [501,153, 850,705] (assumes normal distribution)
+	 *   20,119 ±(99.9%) 0,475 us/op [Average]
+	 *   (min, avg, max) = (20,004, 20,119, 20,323), stdev = 0,123
+	 *   CI (99.9%): [19,644, 20,594] (assumes normal distribution)
 	 */
 	public static void benchmarkDefaultSearch(final InputWrapper wrapper, final Blackhole blackhole)
 	{
@@ -66,9 +63,9 @@ public class Day1 extends Day
 	/**
 	 * Sorting within the Method:
 	 *  Result "de.adventofcode.day1.Day1.sortSearch":
-	 *   4,358 ±(99.9%) 0,076 us/op [Average]
-	 *   (min, avg, max) = (4,332, 4,358, 4,380), stdev = 0,020
-	 *   CI (99.9%): [4,282, 4,434] (assumes normal distribution)
+	 *    5,323 ±(99.9%) 0,027 us/op [Average]
+	 *   (min, avg, max) = (5,319, 5,323, 5,336), stdev = 0,007
+	 *   CI (99.9%): [5,296, 5,350] (assumes normal distribution)
 	 *
 	 */
 	public static void benchmarkSortSearch(final InputWrapper wrapper, final Blackhole blackhole)
@@ -87,9 +84,9 @@ public class Day1 extends Day
 
 	/**
 	 * Result "de.adventofcode.day1.Day1.benchmarkSortedSearch":
-	 *   75,375 ±(99.9%) 1,366 ns/op [Average]
-	 *   (min, avg, max) = (74,889, 75,375, 75,846), stdev = 0,355
-	 *   CI (99.9%): [74,009, 76,741] (assumes normal distribution)
+	 *   38,586 ±(99.9%) 0,464 ns/op [Average]
+	 *   (min, avg, max) = (38,467, 38,586, 38,755), stdev = 0,120
+	 *   CI (99.9%): [38,122, 39,049] (assumes normal distribution)
 	 */
 	public static void benchmarkSortedSearch(final SortedWrapper wrapper, final Blackhole blackhole)
 	{
@@ -161,7 +158,7 @@ public class Day1 extends Day
 		return -1;
 	}
 
-	private static long streamSearch(long[] input)
+	private static long miniSortSearch(long[] input)
 	{
 		for (final long aLong1 : input)
 		{
@@ -259,7 +256,7 @@ public class Day1 extends Day
 	{
 		final long[] array = getArray(getInput());
 		quickSort(array, 0, array.length - 1);
-		return streamSearch(array);
+		return miniSortSearch(array);
 	}
 
 	@Override
