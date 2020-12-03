@@ -18,8 +18,14 @@ public class Launcher
 
 	private static void printDay(final Challenge day)
 	{
+		final long start = System.currentTimeMillis();
+		final long solutionP1 = day.solvePart1();
+		final long solutionP2 = day.solvePart2();
+		final long end = System.currentTimeMillis();
+
 		System.out.println(String.format("%15s%s%15s", "", day.getClass().getSimpleName(), "").replace(' ', '-'));
-		System.out.println("Part 1: " + day.solvePart1());
-		System.out.println("Part 2: " + day.solvePart2());
+		System.out.println("Part 1: " + solutionP1);
+		System.out.println("Part 2: " + solutionP2);
+		System.out.println("Took " + (end-start) + " ms");
 	}
 }
