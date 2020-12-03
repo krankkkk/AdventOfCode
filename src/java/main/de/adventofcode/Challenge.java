@@ -2,7 +2,7 @@ package de.adventofcode;
 
 public interface Challenge
 {
-	int solvePart1();
+	long solvePart1();
 
-	int solvePart2();
+	long solvePart2();
 }

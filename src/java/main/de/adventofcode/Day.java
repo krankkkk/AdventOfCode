@@ -18,9 +18,15 @@ public abstract class Day implements Challenge
 		return getClass().getSimpleName() + "{" + "Part1: " + this.solvePart1() + " Part2: " + this.solvePart2() + "}";
 	}
 
+
 	protected List<String> getInput()
 	{
-		try (BufferedReader reader = new BufferedReader(new FileReader(new File(getClass().getResource("input.txt").toURI()))))
+		return getInput("input.txt");
+	}
+
+	protected List<String> getInput(final String name)
+	{
+		try (BufferedReader reader = new BufferedReader(new FileReader(new File(getClass().getResource(name).toURI()))))
 		{
 			return reader.lines().collect(Collectors.toList());
 		}

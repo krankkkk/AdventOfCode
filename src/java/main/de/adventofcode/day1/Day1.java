@@ -16,10 +16,10 @@ import static de.adventofcode.util.ListUtils.mapToInt;
  * # VM version: JDK 15, OpenJDK 64-Bit Server VM, 15+36
  * <p>
  * Benchmark                    Mode  Cnt    Score    Error  Units
- * Day1.benchmarkDefaultSearch  avgt    5  219,784 ± 6,061  us/op
+ * Day1.benchmarkDefaultSearch  avgt    5  219,784 ±  6,061  us/op
  * Day1.benchmarkMapSearch      avgt    5   21,257 ±  0,355  us/op
  * Day1.benchmarkSortSearch     avgt    5   4,376  ±  0,030  us/op
- * Day1.benchmarkSortedSearch   avgt    5  75,375  ±  1,366  ns/op
+ * Day1.benchmarkSortedSearch   avgt    5  75,375  ±  1,366  ns/op (that's 0,034% of the default-search)
  */
 public class Day1 extends Day
 {
@@ -185,7 +185,11 @@ public class Day1 extends Day
 	public static int partition(Integer[] a, int beg, int end)
 	{
 
-		int left, right, temp, loc, flag;
+		int left;
+		int right;
+		int temp;
+		int loc;
+		int flag;
 		loc = left = beg;
 		right = end;
 		flag = 0;
@@ -241,7 +245,7 @@ public class Day1 extends Day
 	}
 
 	@Override
-	public int solvePart1()
+	public long solvePart1()
 	{
 		final Optional<Doublet<Integer>> optional = streamSearch(mapToInt(getInput()));
 		if (optional.isEmpty())
@@ -253,7 +257,7 @@ public class Day1 extends Day
 	}
 
 	@Override
-	public int solvePart2()
+	public long solvePart2()
 	{
 		final Integer[] array = getArray(mapToInt(getInput()));
 		Arrays.sort(array);
