@@ -1,7 +1,6 @@
 package de.adventofcode.day1;
 
 import de.adventofcode.Day;
-import de.adventofcode.util.Triplet;
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.infra.Blackhole;
 
@@ -93,29 +92,30 @@ public class Day1 extends Day
 		blackhole.consume(sortSearch(wrapper.input));
 	}
 
-	private static Triplet<Long> mapSearch(final Map<Long, String> input)
+	private static long mapSearch(final Map<Long, String> input)
 	{
 		for (final long outer : input.keySet())
 		{
 			for (final long middle : input.keySet())
 			{
-				if (outer + middle > 2020)
+				final long combo = outer + middle;
+				if (combo > 2020)
 				{
 					continue;
 				}
 
-				final long rest = 2020 - outer - middle;
+				final long rest = 2020 - combo;
 
 				if (input.get(rest) != null)
 				{
-					return new Triplet<>(outer, middle, rest);
+					return outer * middle * rest;
 				}
 			}
 		}
-		return null;
+		return -1;
 	}
 
-	private static Triplet<Long> defaultSearch(final long[] input)
+	private static long defaultSearch(final long[] input)
 	{
 		for (final long outer : input)
 		{
@@ -125,12 +125,12 @@ public class Day1 extends Day
 				{
 					if (outer + middle + inner == 2020)
 					{
-						return new Triplet<>(outer, middle, inner);
+						return outer * middle * inner;
 					}
 				}
 			}
 		}
-		return null;
+		return -1;
 	}
 
 	private static long sortSearch(final long[] sorted)
@@ -186,7 +186,7 @@ public class Day1 extends Day
 		final long[] arr = new long[size];
 		for (int i = 0; i < size; i++)
 		{
-			arr[i]= Long.parseLong(input.get(i));
+			arr[i] = Long.parseLong(input.get(i));
 		}
 		return arr;
 	}
