@@ -13,6 +13,13 @@ public class Launcher
 
 	public static void main(String[] args)
 	{
-		challenges.forEach(System.out::println);
+		challenges.forEach(Launcher::printDay);
+	}
+
+	private static void printDay(final Challenge day)
+	{
+		System.out.println(String.format("%15s%s%15s", "", day.getClass().getSimpleName(), "").replace(' ', '-'));
+		System.out.println("Part 1: " + day.solvePart1());
+		System.out.println("Part 2: " + day.solvePart2());
 	}
 }
