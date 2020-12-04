@@ -252,7 +252,7 @@ public class Day1 extends Day
 	}
 
 	@Override
-	public long solvePart1()
+	public Long solvePart1()
 	{
 		final long[] array = getArray(getInput());
 		quickSort(array, 0, array.length - 1);
@@ -260,7 +260,7 @@ public class Day1 extends Day
 	}
 
 	@Override
-	public long solvePart2()
+	public Long solvePart2()
 	{
 		final long[] array = getArray(getInput());
 		quickSort(array, 0, array.length - 1);

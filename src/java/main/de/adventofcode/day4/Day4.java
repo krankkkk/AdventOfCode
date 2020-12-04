@@ -9,7 +9,7 @@ import java.util.List;
 public class Day4 extends Day
 {
 	@Override
-	public long solvePart1()
+	public Long solvePart1()
 	{
 		long count = 0L;
 		for (PassPort passPort : getPassPorts())
@@ -23,7 +23,7 @@ public class Day4 extends Day
 	}
 
 	@Override
-	public long solvePart2()
+	public Long solvePart2()
 	{
 		long count = 0L;
 		for (PassPort passPort : getPassPorts())
@@ -171,18 +171,12 @@ public class Day4 extends Day
 			final int i = Integer.parseInt(this.hgt.substring(0, this.hgt.length() - 2));
 			final String substring = this.hgt.substring(this.hgt.length() - 2);
 
-			if (substring.equals("in"))
-			{
-				return 59 <= i && i <= 76;
-			}
-			else if (substring.equals("cm"))
-			{
-				return 150 <= i && i <= 193;
-			}
-			else
-			{
-				return false;
-			}
+			return switch (substring)
+					{
+						case "in" -> 59 <= i && i <= 76;
+						case "cm" -> 150 <= i && i <= 193;
+						default -> false;
+					};
 		}
 
 		public boolean isHairValid()
@@ -197,7 +191,7 @@ public class Day4 extends Day
 				return false;
 			}
 
-			for (int i = 1; i < this.hcl.length() - 1; i++)
+			for (int i = 1; i < 6; i++)
 			{
 				final char c = this.hcl.charAt(i);
 				if (!(('0' <= c && c <= '9') || ('a' <= c && c <= 'f')))

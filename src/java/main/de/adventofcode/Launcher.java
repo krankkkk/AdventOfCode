@@ -10,14 +10,14 @@ import java.util.List;
 public class Launcher
 {
 
-	private static final List<Challenge> challenges = List.of(new Day1(), new Day2(), new Day3(), new Day4());
+	private static final List<Challenge<Long>> challenges = List.of(new Day1(), new Day2(), new Day3(), new Day4());
 
 	public static void main(String[] args)
 	{
 		challenges.forEach(Launcher::printDay);
 	}
 
-	private static void printDay(final Challenge day)
+	private static void printDay(final Challenge<Long> day)
 	{
 		final long start = System.currentTimeMillis();
 		final long solutionP1 = day.solvePart1();

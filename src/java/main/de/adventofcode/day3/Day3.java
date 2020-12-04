@@ -10,7 +10,7 @@ public class Day3 extends Day
 	private static final char TREE = '#';
 
 	@Override
-	public long solvePart1()
+	public Long solvePart1()
 	{
 		return getCounter(getInput(), 3, 1);
 	}
@@ -42,7 +42,7 @@ public class Day3 extends Day
 	}
 
 	@Override
-	public long solvePart2()
+	public Long solvePart2()
 	{
 		final List<String> input = getInput();
 

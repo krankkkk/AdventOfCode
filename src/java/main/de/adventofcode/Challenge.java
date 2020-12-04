@@ -1,8 +1,8 @@
 package de.adventofcode;
 
-public interface Challenge
+public interface Challenge<T>
 {
-	long solvePart1();
+	T solvePart1();
 
-	long solvePart2();
+	T solvePart2();
 }

@@ -9,7 +9,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public abstract class Day implements Challenge
+public abstract class Day implements Challenge<Long>
 {
 
 	@Override

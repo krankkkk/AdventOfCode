@@ -35,13 +35,13 @@ public class Day2 extends Day
 	}
 
 	@Override
-	public long solvePart1()
+	public Long solvePart1()
 	{
 		return getInput().stream().filter(Day2::isValidPart1).count();
 	}
 
 	@Override
-	public long solvePart2()
+	public Long solvePart2()
 	{
 		return getInput().stream().filter(Day2::isValidPart2).count();
 	}
