@@ -12,7 +12,7 @@ import java.util.concurrent.TimeUnit;
  * # VM version: JDK 15, OpenJDK 64-Bit Server VM, 15+36
  * <p>
  * Benchmark                    Mode  Cnt    Score    Error  Units
- * Day1.benchmarkDefaultSearch  avgt    5  36,487 ± 0,191  us/op
+ * Day1.benchmarkDefaultSearch  avgt   50  611,385 ± 169,035  us/op <- all over the place from 600 to 20
  * Day1.benchmarkMapSearch      avgt    5  20,119 ± 0,475  us/op
  * Day1.benchmarkSortSearch     avgt    5   5,323 ± 0,027  us/op
  * Day1.benchmarkSortedSearch   avgt    5  38,586 ± 0,464  ns/op
@@ -41,12 +41,12 @@ public class Day1 extends Day
 	@Warmup(iterations = 2)
 	@Measurement(iterations = 5)
 	@BenchmarkMode(Mode.AverageTime)
-	@Fork(value = 1)
+	@Fork(value = 10)
 	/**
 	 * Result "de.adventofcode.day1.Day1.defaultSearch":
-	 *   20,119 ±(99.9%) 0,475 us/op [Average]
-	 *   (min, avg, max) = (20,004, 20,119, 20,323), stdev = 0,123
-	 *   CI (99.9%): [19,644, 20,594] (assumes normal distribution)
+	 *   611,385 ±(99.9%) 169,035 us/op [Average]
+	 *   (min, avg, max) = (174,917, 611,385, 1292,914), stdev = 341,459
+	 *   CI (99.9%): [442,350, 780,420] (assumes normal distribution)
 	 */
 	public static void benchmarkDefaultSearch(final InputWrapper wrapper, final Blackhole blackhole)
 	{
