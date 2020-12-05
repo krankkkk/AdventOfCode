@@ -2,7 +2,9 @@ package de.adventofcode.day5;
 
 import de.adventofcode.Day;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class Day5 extends Day
 {
@@ -16,10 +18,7 @@ public class Day5 extends Day
 
 		for (final String line : input)
 		{
-			final char[] chars = line.toCharArray();
-			int rowHighest = getRow(chars);
-			int column = getColumn(chars);
-			final int id = rowHighest * 8 + column;
+			final long id = getId(line);
 
 			if (id > max)
 			{
@@ -35,63 +34,45 @@ public class Day5 extends Day
 	{
 		final List<String> input = getInput();
 
-		final Map<Integer, Boolean> seats = new HashMap<>(input.size());
+		final Map<Long, Boolean> seats = new HashMap<>(input.size());
 
 		for (final String line : input)
 		{
-			final char[] chars = line.toCharArray();
-			int rowHighest = getRow(chars);
-			int column = getColumn(chars);
-			final int id = rowHighest * 8 + column;
-
-			seats.put(id, Boolean.TRUE);
+			seats.put(getId(line), Boolean.TRUE);
 		}
 
-		for (final Integer lower : seats.keySet())
+		for (final Long lower : seats.keySet())
 		{
-			if (seats.get(lower + 1) == null && seats.get(lower + 2))
+			if (seats.get(lower + 1) == null && seats.get(lower + 2) != null)
 			{
-				return Long.valueOf(lower + 1);
+				return lower + 1;
 			}
 		}
 
 		return -1L;
 	}
 
-	private int getRow(char[] chars)
+	private long getId(String line)
 	{
-		int rowLowest = 0;
-		int rowHighest = 127;
-		for (int i = 0; i < chars.length - 3; i++)
-		{
-			if (chars[i] == 'F')
-			{
-				rowHighest = Math.floorDiv(rowHighest + rowLowest, 2);
-			}
-			else
-			{
-				rowLowest = Math.floorDiv(rowHighest + rowLowest, 2) + 1;
-			}
-		}
-		return rowHighest;
+		final char[] chars = line.toCharArray();
+		int rowHighest = getRow(chars, 'F', 0, 127, 0, chars.length - 3);
+		int column = getRow(chars, 'L', 0, 7, chars.length - 3, chars.length);
+		return rowHighest * 8 + column;
 	}
 
-	private int getColumn(char[] chars)
+	private int getRow(final char[] chars, final char toFilter, int lowest, int highest, final int start, final int stop)
 	{
-		int columnLowest = 0;
-		int columnHighest = 7;
-		for (int i = chars.length - 3; i < chars.length; i++)
+		for (int i = start; i < stop; i++)
 		{
-			final int diff = Math.floorDiv(columnLowest + columnHighest, 2);
-			if (chars[i] == 'L')
+			if (chars[i] == toFilter)
 			{
-				columnHighest = diff;
+				highest = Math.floorDiv(highest + lowest, 2);
 			}
 			else
 			{
-				columnLowest = diff + 1;
+				lowest = Math.floorDiv(highest + lowest, 2) + 1;
 			}
 		}
-		return columnHighest;
+		return highest;
 	}
 }
