@@ -4,13 +4,14 @@ import de.adventofcode.day1.Day1;
 import de.adventofcode.day2.Day2;
 import de.adventofcode.day3.Day3;
 import de.adventofcode.day4.Day4;
+import de.adventofcode.day5.Day5;
 
 import java.util.List;
 
 public class Launcher
 {
 
-	private static final List<Challenge<Long>> challenges = List.of(new Day1(), new Day2(), new Day3(), new Day4());
+	private static final List<Challenge<Long>> challenges = List.of(new Day1(), new Day2(), new Day3(), new Day4(), new Day5());
 
 	public static void main(String[] args)
 	{
