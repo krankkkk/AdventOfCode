@@ -1,6 +1,7 @@
 package de.adventofcode.day1;
 
 import de.adventofcode.Day;
+import de.adventofcode.util.ArrayUtils;
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.infra.Blackhole;
 
@@ -70,7 +71,7 @@ public class Day1 extends Day
 	public static void benchmarkSortSearch(final InputWrapper wrapper, final Blackhole blackhole)
 	{
 		final long[] array = getArray(wrapper.input);
-		quickSort(array, 0, array.length - 1);
+		ArrayUtils.quickSort(array, 0, array.length - 1);
 		blackhole.consume(sortSearch(array));
 	}
 
@@ -80,7 +81,6 @@ public class Day1 extends Day
 	@Measurement(iterations = 5)
 	@BenchmarkMode(Mode.AverageTime)
 	@Fork(value = 1)
-
 	/**
 	 * Result "de.adventofcode.day1.Day1.benchmarkSortedSearch":
 	 *   38,586 ±(99.9%) 0,464 ns/op [Average]
@@ -191,71 +191,11 @@ public class Day1 extends Day
 		return arr;
 	}
 
-	public static int partition(long[] a, int beg, int end)
-	{
-		int left;
-		int right;
-		long temp;
-		int loc;
-		int flag;
-		loc = left = beg;
-		right = end;
-		flag = 0;
-		while (flag != 1)
-		{
-			while ((a[loc] <= a[right]) && (loc != right))
-			{
-				right--;
-			}
-			if (loc == right)
-			{
-				flag = 1;
-			}
-			else if (a[loc] > a[right])
-			{
-				temp = a[loc];
-				a[loc] = a[right];
-				a[right] = temp;
-				loc = right;
-			}
-			if (flag != 1)
-			{
-				while ((a[loc] >= a[left]) && (loc != left))
-				{
-					left++;
-				}
-				if (loc == left)
-				{
-					flag = 1;
-				}
-				else if (a[loc] < a[left])
-				{
-					temp = a[loc];
-					a[loc] = a[left];
-					a[left] = temp;
-					loc = left;
-				}
-			}
-		}
-		return loc;
-	}
-
-	static void quickSort(long[] a, int beg, int end)
-	{
-		int loc;
-		if (beg < end)
-		{
-			loc = partition(a, beg, end);
-			quickSort(a, beg, loc - 1);
-			quickSort(a, loc + 1, end);
-		}
-	}
-
 	@Override
 	public Long solvePart1()
 	{
 		final long[] array = getArray(getInput());
-		quickSort(array, 0, array.length - 1);
+		ArrayUtils.quickSort(array, 0, array.length - 1);
 		return miniSortSearch(array);
 	}
 
@@ -263,7 +203,7 @@ public class Day1 extends Day
 	public Long solvePart2()
 	{
 		final long[] array = getArray(getInput());
-		quickSort(array, 0, array.length - 1);
+		ArrayUtils.quickSort(array, 0, array.length - 1);
 		return sortSearch(array);
 	}
 
@@ -289,7 +229,7 @@ public class Day1 extends Day
 		public void setup()
 		{
 			final long[] integers = getArray(new Day1().getInput());
-			quickSort(integers, 0, integers.length - 1);
+			ArrayUtils.quickSort(integers, 0, integers.length - 1);
 			this.input = integers;
 		}
 	}
