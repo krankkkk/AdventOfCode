@@ -9,13 +9,10 @@ public class Day7 extends Day
 	@Override
 	public Long solvePart1()
 	{
-
-		final List<String> debug = getInput();
-
-		final Map<String, Map<String, Integer>> bags = new HashMap<>(debug.size());//All Bags with all direct Sub-Bags and Count
+				final Map<String, Map<String, Integer>> bags = new HashMap<>(input.size());//All Bags with all direct Sub-Bags and Count
 		final List<String> bagsToCheck = new ArrayList<>();//Where the shiny Gold Bags are
 
-		for (final String line : debug)
+		for (final String line : input)
 		{
 			final String[] split = line.split(" contain ");
 			final String currentColor = split[0].split(" bag")[0];
@@ -67,11 +64,9 @@ public class Day7 extends Day
 	@Override
 	public Long solvePart2()
 	{
-		final List<String> debug = getInput();
+		final Map<String, Map<String, Integer>> bags = new HashMap<>(input.size());
 
-		final Map<String, Map<String, Integer>> bags = new HashMap<>(debug.size());
-
-		for (final String line : debug)
+		for (final String line : input)
 		{
 			final String[] split = line.split(" contain ");
 			final String currentColor = split[0].split(" bag")[0];
