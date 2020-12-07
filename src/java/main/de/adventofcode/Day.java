@@ -12,6 +12,8 @@ import java.util.stream.Collectors;
 public abstract class Day implements Challenge<Long>
 {
 
+	protected List<String> input = getInput();
+
 	@Override
 	public String toString()
 	{
