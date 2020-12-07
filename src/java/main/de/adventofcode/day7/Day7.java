@@ -9,7 +9,7 @@ public class Day7 extends Day
 	@Override
 	public Long solvePart1()
 	{
-				final Map<String, Map<String, Integer>> bags = new HashMap<>(input.size());//All Bags with all direct Sub-Bags and Count
+		final Map<String, Map<String, Integer>> bags = new HashMap<>(input.size());//All Bags with all direct Sub-Bags and Count
 		final List<String> bagsToCheck = new ArrayList<>();//Where the shiny Gold Bags are
 
 		for (final String line : input)
@@ -41,7 +41,7 @@ public class Day7 extends Day
 		}
 
 
-		while (fillUp(bags,bagsToCheck) != 0)
+		while (fillUp(bags, bagsToCheck) != 0)
 		{
 		}
 
