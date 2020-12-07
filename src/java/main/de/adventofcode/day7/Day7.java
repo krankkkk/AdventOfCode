@@ -6,67 +6,72 @@ import java.util.*;
 
 public class Day7 extends Day
 {
+
 	@Override
 	public Long solvePart1()
 	{
-		final Map<String, Map<String, Integer>> bags = new HashMap<>(input.size());//All Bags with all direct Sub-Bags and Count
-		final List<String> bagsToCheck = new ArrayList<>();//Where the shiny Gold Bags are
+		final Map<String, String[]> bags = new HashMap<>(input.size());//All Bags with all direct Sub-Bags and Count
 
 		for (final String line : input)
 		{
 			final String[] split = line.split(" contain ");
-			final String currentColor = split[0].split(" bag")[0];
-
 			final String[] split1 = split[1].split(", ");
-			final Map<String, Integer> config;
 			if (!split1[0].equals("no other bags."))
 			{
-				config = new HashMap<>(split1.length);
-				for (String s : split1)
+				String[] config = new String[split1.length];
+				for (int i = 0; i < split1.length; i++)
 				{
-					String substring = s.substring(2).split(" bag")[0];
-
-					if (substring.equals("shiny gold"))
-					{
-						bagsToCheck.add(currentColor);
-					}
-					config.put(substring, Integer.valueOf(Character.toString(s.charAt(0))));
+					config[i]=split1[i].substring(2).split(" bag")[0];
 				}
+				bags.put(split[0].split(" bag")[0], config);
 			}
-			else
-			{
-				config = Collections.emptyMap();
-			}
-			bags.put(currentColor, config);
 		}
 
-
-		while (fillUp(bags, bagsToCheck) != 0)
+		long count = 0L;
+		for (String key : bags.keySet().toArray(String[]::new))
 		{
+			if (leadsToGoldBag(key, bags))
+			{
+				count++;
+			}
 		}
-
-		return (long) bagsToCheck.size();
+		return count;
 	}
 
-	private int fillUp(Map<String, Map<String, Integer>> bags, List<String> bagsToCheck)
+	private static boolean leadsToGoldBag(final String key, final Map<String, String[]> bags)
 	{
-		final List<String> add = new ArrayList<>();
-		for (final String container : bagsToCheck)
+		final String[] children = bags.get(key);
+
+		if (children == null)
 		{
-			bags.entrySet().stream().filter(e -> e.getValue().containsKey(container))
-					.filter(e -> !bagsToCheck.contains(e.getKey()) && !add.contains(e.getKey()))
-					.forEach(e -> add.add(e.getKey()));
+			return false;
 		}
-		bagsToCheck.addAll(add);
-		return add.size();
+
+		for (final String subKey : children)
+		{
+			if (leadsToGoldBag(subKey, bags))
+			{
+				return true;
+			}
+		}
+
+		for (String str : children)
+		{
+			if (str.equals("shiny gold"))
+			{
+				return true;
+			}
+		}
+		bags.remove(key);//Dont check again
+		return false;
 	}
 
 	@Override
 	public Long solvePart2()
 	{
-		final Map<String, Map<String, Integer>> bags = new HashMap<>(input.size());
+		final Map<String, Bag> bags = new HashMap<>(input.size());
 
-		for (final String line : input)
+		for (final String line : this.input)
 		{
 			final String[] split = line.split(" contain ");
 			final String currentColor = split[0].split(" bag")[0];
@@ -86,25 +91,31 @@ public class Day7 extends Day
 			{
 				config = Collections.emptyMap();
 			}
-			bags.put(currentColor, config);
+			bags.put(currentColor, new Bag(currentColor, config));
 		}
 
-		long sum = 0L;
-		for (Map.Entry<String, Integer> entry : bags.get("shiny gold").entrySet())
-		{
-			sum += getCount(entry, bags) * entry.getValue();
-		}
-
-		return sum;
+		return bags.get("shiny gold").subBags.entrySet().stream().mapToLong(entry -> getCount(entry, bags) * entry.getValue()).sum();
 	}
 
-	private long getCount(Map.Entry<String, Integer> entry, Map<String, Map<String, Integer>> bags)
+	private static long getCount(Map.Entry<String, Integer> entry, final Map<String, Bag> bags)
 	{
 		long sum = 1L;
-		for (Map.Entry<String, Integer> entry2 : bags.get(entry.getKey()).entrySet())
+		for (Map.Entry<String, Integer> entry2 : bags.get(entry.getKey()).subBags.entrySet())
 		{
 			sum += getCount(entry2, bags) * entry2.getValue();
 		}
 		return sum;
+	}
+
+	private static class Bag
+	{
+		final String name;
+		final Map<String, Integer> subBags;
+
+		public Bag(String name, Map<String, Integer> subBags)
+		{
+			this.name = name;
+			this.subBags = subBags;
+		}
 	}
 }
