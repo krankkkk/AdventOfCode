@@ -98,6 +98,7 @@ public class Day8 extends Day
 			final List<String> newList = new ArrayList<>(input);
 			newList.set(i, newLine);
 			accumulator.set(0L);
+
 			if (doOperations(new ArrayList<>(200), accumulator, newList))
 			{
 				break;
