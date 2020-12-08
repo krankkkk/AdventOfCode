@@ -49,7 +49,7 @@ public class Day8 extends Day
 						currentIndex += number;
 						break;
 					default:
-						throw new IllegalStateException("Unexpected value: " + instruction);
+						throw new IllegalStateException("Unexpected instruction: " + instruction + " at Index: " + currentIndex);
 				}
 
 				line = operations.get(currentIndex);
