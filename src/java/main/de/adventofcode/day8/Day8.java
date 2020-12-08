@@ -14,7 +14,7 @@ public class Day8 extends Day
 
 		AtomicLong accumulator = new AtomicLong(0L);
 
-		doOperations(new ArrayList<>(), accumulator, input);
+		doOperations(new ArrayList<>(200), accumulator, input);
 
 		return accumulator.get();
 	}
@@ -98,7 +98,7 @@ public class Day8 extends Day
 			final List<String> newList = new ArrayList<>(input);
 			newList.set(i, newLine);
 			accumulator.set(0L);
-			if (doOperations(new ArrayList<>(), accumulator, newList))
+			if (doOperations(new ArrayList<>(200), accumulator, newList))
 			{
 				break;
 			}
