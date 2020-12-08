@@ -99,12 +99,7 @@ public class Day7 extends Day
 
 	private static long getCount(Map.Entry<String, Integer> entry, final Map<String, Bag> bags)
 	{
-		long sum = 1L;
-		for (Map.Entry<String, Integer> entry2 : bags.get(entry.getKey()).subBags.entrySet())
-		{
-			sum += getCount(entry2, bags) * entry2.getValue();
-		}
-		return sum;
+		return bags.get(entry.getKey()).subBags.entrySet().stream().mapToLong(entry2 -> getCount(entry2, bags) * entry2.getValue()).sum() + 1L;
 	}
 
 	private static class Bag
