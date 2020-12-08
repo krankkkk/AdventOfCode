@@ -11,7 +11,6 @@ public class Day8 extends Day
 	@Override
 	public Long solvePart1()
 	{
-
 		AtomicLong accumulator = new AtomicLong(0L);
 
 		doOperations(new ArrayList<>(200), accumulator, input);
@@ -104,7 +103,6 @@ public class Day8 extends Day
 				break;
 			}
 		}
-
 
 		return accumulator.get();
 	}
