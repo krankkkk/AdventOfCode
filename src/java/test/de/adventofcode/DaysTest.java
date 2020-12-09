@@ -8,6 +8,7 @@ import de.adventofcode.day5.Day5;
 import de.adventofcode.day6.Day6;
 import de.adventofcode.day7.Day7;
 import de.adventofcode.day8.Day8;
+import de.adventofcode.day9.Day9;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -77,6 +78,15 @@ class DaysTest
 		final Day day = new Day8();
 		assertEquals(1262, day.solvePart1());
 		assertEquals(1643, day.solvePart2());
+	}
+
+
+	@Test
+	void testDay9()
+	{
+		final Day day = new Day9();
+		assertEquals(373803594, day.solvePart1());
+		assertEquals(51152360, day.solvePart2());
 	}
 
 }

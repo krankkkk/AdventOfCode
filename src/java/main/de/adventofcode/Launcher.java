@@ -8,13 +8,15 @@ import de.adventofcode.day5.Day5;
 import de.adventofcode.day6.Day6;
 import de.adventofcode.day7.Day7;
 import de.adventofcode.day8.Day8;
+import de.adventofcode.day9.Day9;
 
 import java.util.List;
 
 public class Launcher
 {
 
-	private static final List<Challenge<Long>> challenges = List.of(new Day1(), new Day2(), new Day3(), new Day4(), new Day5(), new Day6(), new Day7(), new Day8());
+	private static final List<Challenge<Long>> challenges = List.of(new Day1(), new Day2(), new Day3(), new Day4(), new Day5(), new Day6(), new Day7(), new Day8(),
+	                                                                new Day9());
 
 	public static void main(String[] args)
 	{
