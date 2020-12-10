@@ -1,6 +1,7 @@
 package de.adventofcode;
 
 import de.adventofcode.day1.Day1;
+import de.adventofcode.day10.Day10;
 import de.adventofcode.day2.Day2;
 import de.adventofcode.day3.Day3;
 import de.adventofcode.day4.Day4;
@@ -89,4 +90,12 @@ class DaysTest
 		assertEquals(51152360, day.solvePart2());
 	}
 
+
+	@Test
+	void testDay10()
+	{
+		final Day day = new Day10();
+		assertEquals(3034, day.solvePart1());
+		assertEquals(259172170858496L, day.solvePart2());
+	}
 }

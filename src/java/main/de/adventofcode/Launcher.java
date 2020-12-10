@@ -1,6 +1,7 @@
 package de.adventofcode;
 
 import de.adventofcode.day1.Day1;
+import de.adventofcode.day10.Day10;
 import de.adventofcode.day2.Day2;
 import de.adventofcode.day3.Day3;
 import de.adventofcode.day4.Day4;
@@ -16,7 +17,7 @@ public class Launcher
 {
 
 	private static final List<Challenge<Long>> challenges = List.of(new Day1(), new Day2(), new Day3(), new Day4(), new Day5(), new Day6(), new Day7(), new Day8(),
-	                                                                new Day9());
+	                                                                new Day9(), new Day10());
 
 	public static void main(String[] args)
 	{
